@@ -12,4 +12,12 @@ abstract class App {
     }
 
     abstract protected function route(Request $req, Response $res);
+
+    protected function subPath($path) {
+        return $this->basePath() .$path;
+    }
+
+    protected function basePath() {
+        return dirname($_SERVER['SCRIPT_NAME']);
+    }
 }
