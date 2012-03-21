@@ -2,9 +2,9 @@
 
 namespace Fw;
 
-abstract class App {
-    public function dispatch() {
-        $req = Request::createInstance($_REQUEST, $_SERVER);
+abstract class App extends Middleware {
+    public function dispatch($env) {
+        $req = Request::createInstance($env['params'], $env['server']);
         $res = Response::createInstance();
         
         $this->route($req, $res);
