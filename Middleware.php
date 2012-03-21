@@ -4,7 +4,7 @@ namespace Fw;
 
 abstract class Middleware {
 
-    abstract public function __invoke($env, $next = null);
+    abstract public function __invoke($req, $res, $next = null);
 
     static private $stack;
 
@@ -13,16 +13,17 @@ abstract class Middleware {
     }
 
     static public function run() {
-        $env = array('params' => $_REQUEST, 'server' => $_SERVER);
-
+        $req = Request::createInstance($_REQUEST, $_SERVER);
+        $res = Response::createInstance();
+        
         $stack =& self::$stack;
 
-        $next = function($env) use (&$stack, &$next) {
+        $next = function($req, $res) use (&$stack, &$next) {
             $current = array_shift($stack);
-            return $current($env, $next);
+            return $current($req, $res, $next);
         };
 
-        return $next($env);
+        return $next($req, $res);
 
     }
 
