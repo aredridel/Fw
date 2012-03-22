@@ -20,7 +20,12 @@ abstract class Middleware {
 
         $next = function($req, $res) use (&$stack, &$next) {
             $current = array_shift($stack);
-            return $current($req, $res, $next);
+            if ($current) {
+                return $current($req, $res, $next);
+            } else {
+                return '';
+                //FIXME 404
+            }
         };
 
         return $next($req, $res);
