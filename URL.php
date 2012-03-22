@@ -25,7 +25,14 @@ class URL {
     }
 
     public function __toString() {
-        return $this->protocol;
+        $displayPort = '';
+        if ($this->port) {
+            if (($this->protocol == 'http' and $this->port != 80) or
+                ($this->protocol == 'https' and $this->port != 443)) {
+                $displayPort = $this->port;
+            }
+        }
+        return $this->protocol . "://" . $this->host . ($displayPort ? ":$displayPort" : '') . $this->path; // FIXME query string
     }
 
     public function __get($property) {
