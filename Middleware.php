@@ -32,4 +32,12 @@ abstract class Middleware {
 
     }
 
+    protected function subPath($path) {
+        return $this->basePath() .$path;
+    }
+
+    protected function basePath() {
+        return dirname($_SERVER['SCRIPT_NAME']);
+    }
+
 }
