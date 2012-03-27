@@ -4,7 +4,7 @@ namespace Fw;
 
 abstract class Middleware {
 
-    abstract public function __invoke($req, $res, $next = null);
+    abstract public function __invoke(Request $req, Response $res, $next = null);
 
     static private $stack;
 
