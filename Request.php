@@ -2,8 +2,9 @@
 
 namespace Fw;
 
-class Request {
+class Request implements \ArrayAccess {
     private $params;
+    private $properties = array();
     private $server;
     private $url;
     private $method;
@@ -24,8 +25,26 @@ class Request {
             return $this->url;
         } elseif ($property == 'method') {
             return $this->method;
+        } elseif ($property == 'params') {
+            return $this->params;
         }
 
         throw new \LogicException("Unknown property '$property'");
+    }
+
+    public function offsetGet($key) {
+        return $this->properties[$key];
+    }
+
+    public function offsetSet($key, $value) {
+        $this->properties[$key] = $value;
+    }
+
+    public function offsetExists($key) {
+        return array_key_exists($key, $this->properties);
+    }
+
+    public function offsetUnset($key) {
+        unset($this->properties[$key]);
     }
 }
