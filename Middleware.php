@@ -4,7 +4,7 @@ namespace Fw;
 
 abstract class Middleware {
 
-    abstract public function __invoke(Request $req, Response $res, $next = null);
+    abstract public function __invoke(Request $req, Response $res, $next);
 
     static private $stack;
 
@@ -18,21 +18,23 @@ abstract class Middleware {
         
         $stack =& self::$stack;
 
-        $next = function($req, $res) use (&$stack, &$next) {
+        $next = function() use ($req, $res, &$stack, &$next) {
             $current = array_shift($stack);
             if ($current) {
-                return $current($req, $res, $next);
+                $current($req, $res, $next);
             } else {
-                return '';
-                //FIXME 404
+                $res->setStatusCode("404 Not Found");
+                $res->setHeader("Content-Type", "text/plain");
+                $res->write("Not Found");
             }
         };
 
-        return $next($req, $res);
-
+        $next();
+        $res->send();
+        return $res;
     }
 
-    protected function subPath($path) {
+    public function subPath($path) {
         return $this->basePath() .$path;
     }
 

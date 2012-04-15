@@ -7,7 +7,7 @@ use Fw\Middleware;
 
 abstract class LoginMiddleware extends Middleware {
 
-    public function __invoke(Request $req, Response $res, $next = null) {
+    public function __invoke(Request $req, Response $res, $next) {
         session_start();
         if (isset($_SESSION['user'])) {
             $req['authenticated'] = true;
@@ -19,7 +19,17 @@ abstract class LoginMiddleware extends Middleware {
                 $req['authenticated'] = true;
             }
         } else {
-            $next($req, $res);
+            try {
+                $result = $next();
+                return $result;
+            } catch(\Fw\ConditionNotSatisfiedError $e) {
+                if ($e->property == 'authenticated') {
+                    // FIXME -- using subPath feels hacky
+                    $res->redirect($this->subPath('/login'));
+                } else {
+                    throw $e;
+                }
+            }
         }
     }
 

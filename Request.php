@@ -47,4 +47,9 @@ class Request implements \ArrayAccess {
     public function offsetUnset($key) {
         unset($this->properties[$key]);
     }
+
+    public function ensure($property, $value = NULL) {
+        if (!$this[$property]) throw new ConditionNotSatisfiedError($property);
+        if (!is_null($value) and $this[$property] != $value) throw new ConditionNotSatisfiedError($propert, $value);
+    }
 }
