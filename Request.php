@@ -32,8 +32,13 @@ class Request implements \ArrayAccess {
         throw new \LogicException("Unknown property '$property'");
     }
 
-    public function offsetGet($key) {
-        return $this->properties[$key];
+    public function &offsetGet($key) {
+        if (isset($this->properties[$key])) {
+            $ret =& $this->properties[$key];
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
     }
 
     public function offsetSet($key, $value) {

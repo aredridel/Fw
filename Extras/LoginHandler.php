@@ -3,9 +3,9 @@
 namespace Fw\Extras;
 use Fw\Request;
 use Fw\Response;
-use Fw\Middleware;
+use Fw\Handler;
 
-abstract class LoginMiddleware extends Middleware {
+abstract class LoginHandler extends Handler {
 
     public function __invoke(Request $req, Response $res, $next) {
         session_start();
