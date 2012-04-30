@@ -13,29 +13,36 @@ class App extends Handler {
         $req = Request::createInstance($_REQUEST, $_SERVER);
         $res = Response::createInstance();
 
-        $this($req, $res, function($req, $res, $next) {
+        if (!$r = $this($req, $res, null)) {
             $res->setStatusCode("404 Not Found");
             $res->setHeader("Content-Type", "text/plain");
             $res->write("Not Found");
-        });
+        }
+
+        $res->send();
     }
 
-    public function __invoke(Request $req, Response $res, $next) {
+    public function __invoke(Request $req, Response $res, $last) {
         $stack =& $this->stack;
 
-        $nextHandler = function() use ($req, $res, &$stack, &$nextHandler, &$next) {
+        $do = function(Request $req, Response $res, $next) use (&$stack) {
             $current = array_shift($stack);
-            if ($current) {
-                $current($req, $res, $nextHandler);
+            if ($current and $done = $current($req, $res, $next)) {
+                print_r($done);
+                return $done;
+            } elseif ($last) {
+                return $last();
             } else {
-                if ($next) {
-                    $next($req, $res, null); 
-                }
+                return null;
             }
         };
 
-        $nextHandler();
-        $res->send();
+        $next = function() use ($do, $next, $req, $res) {
+            return $do($req, $res, $next);
+        };
+
+        $do($req, $res, $next);
+
         return $res;
     }
 }

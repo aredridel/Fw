@@ -20,8 +20,11 @@ abstract class LoginHandler extends Handler {
             }
         } else {
             try {
-                $result = $next();
-                return $result;
+                if ($next) {
+                    return $next();
+                } else {
+                    return null;
+                }
             } catch(\Fw\ConditionNotSatisfiedError $e) {
                 if ($e->property == 'authenticated') {
                     // FIXME -- using subPath feels hacky
