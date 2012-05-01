@@ -25,7 +25,7 @@ class App extends Handler {
     public function __invoke(Request $req, Response $res, $last) {
         $stack =& $this->stack;
 
-        $do = function(Request $req, Response $res, $next) use (&$stack) {
+        $do = function(Request $req, Response $res, $next) use (&$stack, &$last) {
             $current = array_shift($stack);
             if ($current and $done = $current($req, $res, $next)) {
                 print_r($done);
@@ -37,7 +37,7 @@ class App extends Handler {
             }
         };
 
-        $next = function() use ($do, $next, $req, $res) {
+        $next = function() use ($do, &$next, $req, $res) {
             return $do($req, $res, $next);
         };
 

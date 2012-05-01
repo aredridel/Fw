@@ -17,9 +17,8 @@ class Router extends Handler {
                     $req[$key] = $value;
                 }
                 return $route($req, $res, $next);
-            } else {
-                if ($next) return $next();
             }
         }
+        if ($next) return $next();
     }
 }
