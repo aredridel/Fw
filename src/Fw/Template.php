@@ -2,7 +2,7 @@
 
 namespace Fw;
 
-abstract class Page {
+abstract class Template {
     protected $app, $req, $res;
 
     public function __construct(Handler $app, Request $req, Response $res) {
@@ -11,5 +11,5 @@ abstract class Page {
         $this->res = $res;
     }
 
-    abstract public function render(array $params);
+    abstract public function render($templateName);
 }
