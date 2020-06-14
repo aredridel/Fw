@@ -1,6 +1,6 @@
 {
     "version": "v0.0.5",
-    "name": "aredridel/Fw",
+    "name": "aredridel/fw",
     "type": "library",
     "description": "A microframework",
     "keywords": ["framework"],
